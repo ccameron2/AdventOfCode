@@ -30,7 +30,6 @@
 *.exe
 *.out
 *.app
-adventofcodeaccount.txt
 
 *.ilk
 *.pdb
