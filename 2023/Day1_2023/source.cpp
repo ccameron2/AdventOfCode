@@ -14,7 +14,7 @@ int main()
 
     while (std::getline(inFile, inString))
     {
-        string alphabeticalNumber = "";
+       // string alphabeticalNumber = "";
         for (string::iterator it = inString.begin(); it != inString.end(); ++it)
         {
             if (std::isdigit(*it))
@@ -24,10 +24,10 @@ int main()
             }
             else
             {
-                string str = " ";
-                str[0] = *it;
-                alphabeticalNumber.append(str);
-                auto a = inString.find("nine");
+                //string str = " ";
+                //str[0] = *it;
+                //alphabeticalNumber.append(str);
+                //auto a = inString.find("nine");
             }
         }
         for (string::iterator it = inString.end(); it != inString.begin() - 1; --it)

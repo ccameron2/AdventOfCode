@@ -11,7 +11,7 @@ int charToInt(char ch){
 int main()
 {
     string inString;
-    std::ifstream inFile("input.txt");
+    std::ifstream inFile("inputVal.txt");
     int idSum = 0;
 
     while(inFile >> inString)
@@ -22,11 +22,35 @@ int main()
             inFile >> inString;
             idSum += charToInt(inString[0]);
             
-            int r,g,b;
-            while(inString != ";")
-            {
+            char backChar = ' ';
+
+            int r = 0, g = 0, b = 0;
+
+            while(backChar != ';')
+            {        
                 inFile >> inString;
+
+                int numCubes = std::stoi(inString);
+
+                inFile >> inString;
+               
+                backChar = inString.back(); 
+                inString.pop_back();
+
+                if(inString == "red")
+                {
+                    r += numCubes;
+                }
+                else if(inString == "green")
+                {
+                    g += numCubes;
+                }
+                else if(inString == "blue")
+                {
+                    b += numCubes;
+                }
             }
+            
         }
     }
     std::cout << "Sum: " << idSum << std::endl;
