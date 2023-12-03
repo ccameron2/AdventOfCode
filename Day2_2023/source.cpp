@@ -4,6 +4,10 @@
 
 using std::string;
 
+int charToInt(char ch){
+    return ch - '0';
+}
+
 int main()
 {
     string inString;
@@ -14,8 +18,10 @@ int main()
     {
         if(inString == "Game")
         {
+            // Get ID
             inFile >> inString;
-            idSum += std::stoi();
+            idSum += charToInt(inString[0]);
+            
             int r,g,b;
             while(inString != ";")
             {
