@@ -12,7 +12,7 @@ int charToInt(char ch)
 int main()
 {
     string inString;
-    std::ifstream inFile("inputVal.txt");
+    std::ifstream inFile("input.txt");
     int idSum = 0;
     int id = 0;
 
@@ -72,10 +72,11 @@ int main()
                 // Check maximum cubes needed for this round
                 if (r > maxR)
                     maxR = r;
-                else if (g > maxG)
+                if (g > maxG)
                     maxG = g;
-                else if (b > maxB)
+                if (b > maxB)
                     maxB = b;
+
                 r = 0, g = 0, b = 0;
                 backChar = ' ';
             }
