@@ -12,7 +12,7 @@ int charToInt(char ch)
 int main()
 {
     string inString;
-    std::ifstream inFile("inputVal.txt");
+    std::ifstream inFile("input.txt");
     int idSum = 0;
     int id = 0;
 
@@ -22,9 +22,11 @@ int main()
         {
             bool possible = true;
 
-            // Get ID
+            // Get id and remove : separator
             inFile >> inString;
-            id = charToInt(inString[0]);
+            inString.pop_back();
+
+            id = std::stoi(inString);
 
             char backChar = ' ';
 
@@ -82,7 +84,11 @@ int main()
             // Add id if game is possible
             if (possible)
             {
-                idSum += charToInt(inString[0]);
+                idSum += id;
+            }
+            else
+            {
+                // Reset for next game
                 possible = true;
             }
         }
