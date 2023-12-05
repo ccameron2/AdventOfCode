@@ -12,7 +12,7 @@ int charToInt(char ch)
 int main()
 {
     string inString;
-    std::ifstream inFile("input.txt");
+    std::ifstream inFile("inputVal.txt");
     int idSum = 0;
     int id = 0;
 
@@ -20,8 +20,6 @@ int main()
     {
         if (inString == "Game")
         {
-            bool possible = true;
-
             // Get id and remove : separator
             inFile >> inString;
             inString.pop_back();
@@ -32,6 +30,7 @@ int main()
 
             bool endOfLine = false;
             int r = 0, g = 0, b = 0;
+            int maxR = 0, maxG = 0, maxB = 0;
             while (!endOfLine)
             {
                 // Loop through cube sets
@@ -70,27 +69,35 @@ int main()
                     }
                 }
 
-                // Check if game is possible then reset
-                if (r > 12)
-                    possible = false;
-                else if (g > 13)
-                    possible = false;
-                else if (b > 14)
-                    possible = false;
+                // Check maximum cubes needed for this round
+                if (r > maxR)
+                    maxR = r;
+                else if (g > maxG)
+                    maxG = g;
+                else if (b > maxB)
+                    maxB = b;
                 r = 0, g = 0, b = 0;
                 backChar = ' ';
             }
 
-            // Add id if game is possible
-            if (possible)
+            if (maxR == 0)
             {
-                idSum += id;
+                maxR = 1;
             }
-            else
+            if (maxG == 0)
             {
-                // Reset for next game
-                possible = true;
+                maxG = 1;
             }
+            if (maxB == 0)
+            {
+                maxB = 1;
+            }
+
+            // Calculate power for this game
+            int power = (maxR * maxG * maxB);
+            idSum += power;
+
+            maxR = 0, maxG = 0, maxB = 0;
         }
     }
     std::cout << "Sum: " << idSum << std::endl;
