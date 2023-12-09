@@ -8,6 +8,12 @@ using std::string;
 
 struct Card
 {
+    Card(Card* card)
+    {
+        Id = card->Id;
+        WinningNumbers = card->WinningNumbers;
+        Numbers = card->Numbers;
+    }
     int Id = 0;
     std::vector<int> WinningNumbers;
     std::vector<int> Numbers;
@@ -27,8 +33,8 @@ std::vector<Card> ReadCards(string path)
             if (inString == "Card")
             {
                 Card newCard;
-                bool winningNumsRead = false;
 
+                
                 strStream >> inString;
 
                 inString.pop_back();           
@@ -37,15 +43,11 @@ std::vector<Card> ReadCards(string path)
                 for(int i = 0; i < 2; i++)
                 {
                     std::vector<int> inNumbers;
-                    strStream >> inString;
-                    while(inString != "|");
-                    {         
-                        strStream >> inString;
-                        if(inString == "|") break;                   
-                        inNumbers.push_back(std::stoi(inString));                
+                    while (strStream >> inString)
+                    {
+                        if (inString == "|") break;
+                        inNumbers.push_back(std::stoi(inString));
                     }
-                    
-
                     if(i == 0) newCard.WinningNumbers = inNumbers;
                     else newCard.Numbers = inNumbers;
                 }
@@ -79,13 +81,14 @@ int ProcessCards(std::vector<Card> cards)
             if(i == 0) cardScore = 1;
             else cardScore *= 2;
         }
+        score += cardScore;
     }
     return score;
 }
 
 int main()
 {
-    std::vector<Card> cards = ReadCards("inputVal.txt");
+    std::vector<Card> cards = ReadCards("input.txt");
 
     int score = ProcessCards(cards);
 
