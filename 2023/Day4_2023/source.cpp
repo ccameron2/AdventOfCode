@@ -8,6 +8,9 @@ using std::string;
 
 struct Card
 {
+    Card()
+    {
+    };
     Card(Card* card)
     {
         Id = card->Id;
@@ -19,11 +22,31 @@ struct Card
     std::vector<int> Numbers;
 };
 
+class CardGame
+{
+
+private:
+
+int Copies = 0;
+std::vector<Card> InCards;
+
+public:
+
+CardGame(string inputFile)
+{
+    InCards = ReadCards(inputFile);
+    
+    ProcessCards();
+    std::cout << "Copies : " << Copies << std::endl;
+};
+
+private:
+
 std::vector<Card> ReadCards(string path)
 {
-    std::vector<Card> cards;
     string inString, inLine;
     std::ifstream inFile(path);
+    std::vector<Card> inCards;
 
     while(std::getline(inFile,inLine))
     {
@@ -32,9 +55,7 @@ std::vector<Card> ReadCards(string path)
         {
             if (inString == "Card")
             {
-                Card newCard;
-
-                
+                Card newCard;              
                 strStream >> inString;
 
                 inString.pop_back();           
@@ -51,49 +72,54 @@ std::vector<Card> ReadCards(string path)
                     if(i == 0) newCard.WinningNumbers = inNumbers;
                     else newCard.Numbers = inNumbers;
                 }
-                cards.push_back(newCard);
+                inCards.push_back(newCard);
             }
-        }
-        
+        }     
     }
-    return cards;
+    Copies = inCards.size();
+    return inCards;
 }
 
-int ProcessCards(std::vector<Card> cards)
+void ProcessCard(Card card)
 {
-    int score = 0;
-    for(auto& card : cards)
+    std::vector<Card> cardStack;
+    int numMatching = 0;
+    for(auto& num : card.Numbers)
     {
-        int numMatching = 0;
-        for(auto& num : card.Numbers)
+        for(int i = 0; i < card.WinningNumbers.size(); i++)
         {
-            for(int i = 0; i < card.WinningNumbers.size(); i++)
+            if(num == card.WinningNumbers[i])
             {
-                if(num == card.WinningNumbers[i])
-                {
-                    ++numMatching;
-                }
-            }           
+                ++numMatching;
+            }
         }
-        int cardScore = 0;
-        for(int i = 0; i < numMatching; i++)
-        {
-            if(i == 0) cardScore = 1;
-            else cardScore *= 2;
-        }
-        score += cardScore;
     }
-    return score;
+    for(int i = 0; i < numMatching; i++)
+    {
+        cardStack.push_back(InCards[card.Id + i]);
+        ++Copies;
+    }
+
+    for(auto card : cardStack)
+    {
+        ProcessCard(card);
+    }
 }
+
+void ProcessCards()
+{
+    for(auto& card : InCards)
+    {
+        ProcessCard(card);
+    }
+}
+};
 
 int main()
 {
-    std::vector<Card> cards = ReadCards("input.txt");
-
-    int score = ProcessCards(cards);
-
-    std::cout << "Score : " << score << std::endl;
+    CardGame game("input.txt");
 
     system("pause");
+
     return 0;
 }
