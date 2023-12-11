@@ -29,13 +29,20 @@ int main()
         inputGrid.push_back(newGridLine);
     }
 
-    for (auto &line : inputGrid)
+    for (int i = 0; i < inputGrid.size(); i++)
     {
-        for (auto &ch : line)
+        for (int j = 0; j < inputGrid[i].size(); j++)
         {
+            char ch = inputGrid[i][j];
             if (ch == '*' || ch == '#' || ch == '+' || ch == '$' || ch == '-' || ch == '=' || ch == '/' || ch == '@' || ch == '%' || ch == '&')
             {
                 // Check for numbers N,NE,E,SE,S,SW,W,NW and add them
+
+                // NW
+                // if(NW is a number)
+                // read full number
+                // add to total
+                if (inputGrid[i - 1][j])
             }
         }
     }
