@@ -28,5 +28,17 @@ int main()
         }
         inputGrid.push_back(newGridLine);
     }
+
+    for (auto &line : inputGrid)
+    {
+        for (auto &ch : line)
+        {
+            if (ch == '*' || ch == '#' || ch == '+' || ch == '$' || ch == '-' || ch == '=' || ch == '/' || ch == '@' || ch == '%' || ch == '&')
+            {
+                // Check for numbers N,NE,E,SE,S,SW,W,NW and add them
+            }
+        }
+    }
+
     return 0;
 }
