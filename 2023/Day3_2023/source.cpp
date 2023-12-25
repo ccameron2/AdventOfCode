@@ -61,7 +61,7 @@ int main()
         }
         inputGrid.push_back(newGridLine);
     }
-    auto previousResult = NearType::Dot;
+
     int sum = 0;
     for (int i = 0; i < inputGrid.size(); i++)
     {
@@ -123,6 +123,7 @@ int main()
                             {
                                 multiNum += input;
                                 steps += 1;
+                                multiNumber = true;
                             }
                             else
                             {
