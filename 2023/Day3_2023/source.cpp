@@ -16,25 +16,24 @@ enum class NearType
 int CharToInt(char ch)
 {
     int res = ch - '0';
-    if(res > 0)
+    if (res > 0)
     {
         return res;
     }
     return 0;
 }
 
-
 NearType CheckNear(char near)
 {
-    if(near == '.')
+    if (near == '.')
     {
         return NearType::Dot;
     }
-    if(isdigit(near))
+    if (isdigit(near))
     {
         return NearType::Number;
     }
-    else if(near == ' ')
+    else if (near == ' ')
     {
         return NearType::Dot;
     }
@@ -74,52 +73,60 @@ int main()
                 bool multiNumber = false;
                 string multiNum = "";
 
-                char W = ' ',NW = ' ',SW = ' ',N = ' ',S = ' ',E = ' ',NE = ' ',SE = ' ';
-                int sizei =  inputGrid.size() - 1;
+                char W = ' ', NW = ' ', SW = ' ', N = ' ', S = ' ', E = ' ', NE = ' ', SE = ' ';
+                int sizei = inputGrid.size() - 1;
                 int sizej = inputGrid[i].size();
-                if(j != 0) N = inputGrid[i][j - 1];
-                if(j != 0 && i < sizei) NE = inputGrid[i + 1][j - 1];
-                if(i != 0 && j != 0) NW = inputGrid[i - 1][j - 1];
-                if(i != 0) W = inputGrid[i - 1][j];
-                if(i != 0 && j < sizej) SW = inputGrid[i - 1][j + 1];            
-                if(j < sizej) S = inputGrid[i][j + 1];
-                if(i < sizei) E = inputGrid[i + 1][j];
-                if(i < sizei && j < sizej)SE = inputGrid[i + 1][j + 1];
+                if (i != 0)
+                    N = inputGrid[i - 1][j];
+                if (j < sizej && i != 0)
+                    NE = inputGrid[i - 1][j + 1];
+                if (i != 0 && j != 0)
+                    NW = inputGrid[i - 1][j - 1];
+                if (j != 0)
+                    W = inputGrid[i][j - 1];
+                if (i < sizei && j != 0)
+                    SW = inputGrid[i + 1][j - 1];
+                if (i < sizei)
+                    S = inputGrid[i + 1][j];
+                if (j < sizej)
+                    E = inputGrid[i][j + 1];
+                if (i < sizei && j < sizej)
+                    SE = inputGrid[i + 1][j + 1];
 
-                char NearSquares[8]{N,NE,E,SE,S,SW,W,NW};
+                char NearSquares[8]{N, NE, E, SE, S, SW, W, NW};
                 NearType NearResults[8];
-                for(int k = 0; k < 8; k++)
+                for (int k = 0; k < 8; k++)
                 {
-                    // optimise: stop checking altogether if a symbol is found
+                    // TODO optimise: stop checking altogether if a symbol is found
                     // ideally dont read the above in at all by checking when they are read
                     NearResults[k] = CheckNear(NearSquares[k]);
                 }
 
-                for(int k = 0; k < 8; k++)
+                for (int k = 0; k < 8; k++)
                 {
                     auto result = NearResults[k];
-                    if(result == NearType::Symbol)
+                    if (result == NearType::Symbol)
                     {
                         addToTotal = false;
                         // Break out of the loop, the numbers are discarded
                         break;
                     }
-                    else if(result == NearType::Number)
+                    else if (result == NearType::Number)
                     {
-                        if(NearResults[6] == result)
-                        {   
+                        if (NearResults[6] == result)
+                        {
                             addToTotal = false;
                             break;
                         } // Break out of the loop, numbers have already been read as a multinumber
-                        
+
                         int steps = 1;
                         bool stepping = true;
                         multiNum += ch;
                         // Find direction it's in and check the next ones until a dot is found to find end of number
-                        while(stepping)
+                        while (stepping)
                         {
                             auto input = inputGrid[i][j + steps];
-                            if(CheckNear(input) != NearType::Dot)
+                            if (CheckNear(input) != NearType::Dot)
                             {
                                 multiNum += input;
                                 steps += 1;
@@ -128,23 +135,26 @@ int main()
                             else
                             {
                                 stepping = false;
-                            }                      
+                            }
                         }
                     }
-                    else if(result == NearType::Dot)
+                    else if (result == NearType::Dot)
                     {
                         // continue
                     }
                 }
 
-                if(addToTotal)
+                if (addToTotal)
                 {
                     // Add the number as it is finished, but only after all results have been checked;
-                    if(!multiNumber){sum += CharToInt(ch);}
+                    if (!multiNumber)
+                    {
+                        sum += CharToInt(ch);
+                    }
                     else
                     {
-                        sum += std::stoi(multiNum); 
-                    } 
+                        sum += std::stoi(multiNum);
+                    }
                 }
                 multiNum = "";
             }
