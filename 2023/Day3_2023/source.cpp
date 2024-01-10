@@ -126,7 +126,8 @@ int main()
                         while (stepping)
                         {
                             auto input = inputGrid[i][j + steps];
-                            if (CheckNear(input) != NearType::Dot)
+                            auto inputCheck = CheckNear(input);
+                            if (inputCheck == NearType::Number)
                             {
                                 multiNum += input;
                                 steps += 1;
