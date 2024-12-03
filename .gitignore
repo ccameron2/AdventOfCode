@@ -35,3 +35,8 @@
 *.pdb
 
 **/.vscode
+/2024/bin-int
+*.vcxproj
+*.user
+*.sln
+/2024/.idea
