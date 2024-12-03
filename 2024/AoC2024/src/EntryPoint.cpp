@@ -7,6 +7,11 @@ int main()
     
     int input = 0;
     std::cin >> input;
+    std::cout << "\n";
+    
+#ifdef WINDOWS
+    system("cls");
+#endif
     
     std::unique_ptr<Day> selectedDay;
     switch(input)
@@ -18,5 +23,6 @@ int main()
             break;
     }
     
-    if(!selectedDay->Init()) std::cout << "Error during initialisation";
+    if(selectedDay->Init()) selectedDay->Run();
+    else std::cout << "Error during initialisation";
 }

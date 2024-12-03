@@ -32,7 +32,10 @@ project "AoC2024"
     {
         "%{prj.name}/src",
     }
-                
+    
+    filter "system:windows"
+        defines "WINDOWS"
+
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
