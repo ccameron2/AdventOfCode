@@ -81,7 +81,7 @@ bool Day2::TestReport(std::vector<int>& report, bool allowTolerance)
         }
     }
     
-    if(allowTolerance)
+    if(!safe && allowTolerance)
     {
         std::vector<int> toleranceReport;
         for(int i = 0; i < report.size(); i++)
