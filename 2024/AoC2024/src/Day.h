@@ -18,3 +18,12 @@ private:
     std::vector<int> List2;
     void SortList(std::vector<int>& List);
 };
+
+class Day2  : public Day
+{
+    bool Init() override;
+    void Run() override;
+private:
+    bool TestReport(std::vector<int>& report, bool allowTolerance);
+    std::vector<std::vector<int>> ReportList;
+};

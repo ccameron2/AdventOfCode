@@ -1,8 +1,9 @@
+#include "Day.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include "Day.h"
+
 
 bool Day1::Init()
 {
@@ -49,3 +50,4 @@ void Day1::Run()
     }
     std::cout << "Part 2 Result: " << result << std::endl;
 }
+
