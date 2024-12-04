@@ -17,7 +17,7 @@ project "AoC2024"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
-    staticruntime "on"
+    staticruntime "off"
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -39,6 +39,7 @@ project "AoC2024"
     filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
+        optimize "off"
         debugdir ("bin/" .. outputdir .. "/%{prj.name}")
 
     filter "configurations:Release"
