@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 class Day
 {
@@ -26,4 +27,21 @@ class Day2  : public Day
 private:
     bool TestReport(std::vector<int>& report, bool allowTolerance);
     std::vector<std::vector<int>> ReportList;
+};
+
+class Day3 : public Day
+{
+public:
+    bool Init() override;
+    void Run() override;
+private:
+    std::vector<std::string> InList;
+};
+
+class Day4 : public Day
+{
+public:
+    bool Init() override;
+    void Run() override;
+private:
 };

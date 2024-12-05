@@ -22,6 +22,9 @@ int main()
         case 2:
             selectedDay = std::make_unique<Day2>();
             break;
+        case 3:
+            selectedDay = std::make_unique<Day3>();
+            break;
         default:
             break;
     }
