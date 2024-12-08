@@ -1,9 +1,7 @@
 #include "Day.h"
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
-
 
 bool Day1::Init()
 {

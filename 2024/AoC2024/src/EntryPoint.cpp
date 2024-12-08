@@ -25,10 +25,14 @@ int main()
         case 3:
             selectedDay = std::make_unique<Day3>();
             break;
-        default:
+        case 4:
+            selectedDay = std::make_unique<Day4>();
             break;
+        default:
+            std::cout << "Invalid input\n";
+            return 0;
     }
     
     if(selectedDay->Init()) selectedDay->Run();
-    else std::cout << "Error during initialisation";
+    else std::cout << "Error during initialisation\n";
 }
