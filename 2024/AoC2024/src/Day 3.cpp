@@ -1,22 +1,17 @@
 #include "Day.h"
 
 #include <iostream>
+#include <ranges>
 #include <string>
 
 
 bool Day3::Init()
 {
-    std::fstream inFile("../../../AoC2024/input/input3test.txt");
-    std::string inStr;
+    std::fstream inFile("../../../AoC2024/input/input3.txt");
+    char ch;
     if(inFile)
     {
-        inFile >> inStr;
-        for(char &c : inStr)
-        {
-            std::string newString;
-            newString.push_back(c);
-            InList.push_back(newString);
-        }
+        while(inFile >> ch) InString.push_back(ch);
         return true;
     }
     return false;
@@ -24,47 +19,71 @@ bool Day3::Init()
 
 void Day3::Run()
 {
-    std::vector safeChars{"m","u","l","(",",",")"};
+    std::vector<char> safeChars{'m','u','l','(',',',')'};
     std::vector<std::string> output;
-    int indicesChecked;
-    for(int i = 0; i < InList.size(); i+= indicesChecked)
+    std::vector<std::pair<int,int>> elements;
+    int safeIndex;
+    int checkIndex;
+    for(int i = 0; i < InString.size(); i+= checkIndex)
     {
-        std::string outputString;
-        indicesChecked = 0;
-        int safeIndex = 0;
-        
+        checkIndex = 0;
+        safeIndex = 0;
+        if(i + checkIndex > InString.size() - 1) break;
+        std::string element1;
+        std::string element2;
+       
         bool failed = false;
-        while(!failed)
+        while (!failed)
         {
-            if(i + indicesChecked >= InList.size()) // reached end of file
+            char ch = InString[i + checkIndex];
+            if(safeIndex == safeChars.size())
             {
+                elements.push_back(std::make_pair<int,int>(stoi(element1),stoi(element2)));
                 break;
             }
-            if(indicesChecked == 4) // must be a number to pass
+            if(ch == safeChars[safeIndex])
             {
-                while(std::stoi(InList[i + indicesChecked]))
+                if(safeIndex == 3)
                 {
-                    InList.push_back(InList[i + indicesChecked]);
-                    indicesChecked++;
-                }
-                if(InList[indicesChecked] == safeChars[safeIndex]) // must be a comma to pass
-                {
-                    safeIndex++;
-                    indicesChecked++;
-                    while(std::stoi(InList[i + indicesChecked]))
+                    int digitIndex = 1;
+                    
+                    while(isdigit(InString[i + checkIndex + digitIndex]))
                     {
-                        InList.push_back(InList[i + indicesChecked]);
-                        indicesChecked++;
+                        element1.push_back(InString[i + checkIndex + digitIndex]);
+                        digitIndex++;
                     }
+                    
+                    checkIndex += digitIndex;
+                    safeIndex++;
+                    continue;
                 }
+                if(safeIndex == 4)
+                {
+                    int digitIndex = 1;
+                    while(isdigit(InString[i + checkIndex + digitIndex]))
+                    {
+                        element2.push_back(InString[i + checkIndex + digitIndex]);
+                        digitIndex++;
+                    }
+                    checkIndex += digitIndex;
+                    safeIndex++;
+                    continue;
+                }
+                safeIndex++;
+                checkIndex++;
             }
-            failed = InList[i + indicesChecked] != safeChars[safeIndex];
-            indicesChecked++;
-            if(failed) break;
-            outputString.push_back(*InList[i + indicesChecked].data());
-            safeIndex++;
+            else
+            {
+                failed = true;
+                checkIndex++;
+            }
         }
-        
-        if(!outputString.empty()) { output.push_back(outputString); }
     }
+
+    int finalCount = 0;
+    for(auto& element : elements)
+    {
+        finalCount += element.first * element.second;
+    }
+    std::cout << finalCount << std::endl;
 }

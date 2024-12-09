@@ -24,6 +24,75 @@ bool Day4::Init()
 
 void Day4::Run()
 {
+    Part1();
+
+    int count = 0;
+    for(int y = 0; y < WordSearch.size(); y++)
+    {
+        for(int x = 0; x < WordSearch[y].size(); x++)
+        {
+            if(y + 1 > WordSearch.size() - 1) continue;
+            if(x + 1 > WordSearch[y].size() - 1) continue;
+            if(y - 1 < 0) continue;
+            if(x - 1 < 0) continue;
+            
+            Coord coord{x,y};
+
+            if(WordSearch[coord.y][coord.x] == 'A')
+            {
+                bool NW = false;
+                bool SW = false;
+                bool NE = false;
+                bool SE = false;
+                
+                if(WordSearch[coord.y + 1][coord.x + 1] == 'M')
+                {
+                    if(WordSearch[coord.y - 1][coord.x - 1] == 'S')
+                    {
+                        SW = true;
+                    }
+                }
+                if(!SW)
+                {
+                    if(WordSearch[coord.y + 1][coord.x + 1] == 'S')
+                    {
+                        if(WordSearch[coord.y - 1][coord.x - 1] == 'M')
+                        {
+                            NE = true;
+                        }
+                    }
+                }
+                
+                if(WordSearch[coord.y + 1][coord.x - 1] == 'M')
+                {
+                    if(WordSearch[coord.y - 1][coord.x + 1] == 'S')
+                    {
+                        SE = true;
+                    }
+                }
+                if(!SE)
+                {
+                    if(WordSearch[coord.y + 1][coord.x - 1] == 'S')
+                    {
+                        if(WordSearch[coord.y - 1][coord.x + 1] == 'M')
+                        {
+                            NW = true;
+                        }
+                    }
+                }
+                if((SW || NE) && (SE || NW))
+                {
+                    count++;
+                }
+            }
+        }
+    }
+    std::cout << count << std::endl;
+}
+
+void Day4::Part1()
+{
+    IsPart1 = true;
     int count = 0;
     for(int y = 0; y < WordSearch.size(); y++)
     {
@@ -37,6 +106,7 @@ void Day4::Run()
         }
     }
     std::cout << count << std::endl;
+    IsPart1 = false;
 }
 
 bool Day4::CheckNorth(Coord coord) const
@@ -89,44 +159,47 @@ bool Day4::CheckWest(Coord coord) const
 
 bool Day4::CheckNorthEast(Coord coord) const
 {
-    if(coord.y + 3 > WordSearch.size() - 1 || coord.x + 3 > WordSearch[0].size() - 1) return false;
+    if(coord.y + 2 + IsPart1 > WordSearch.size() - 1 || coord.x + 2 + IsPart1 > WordSearch[0].size() - 1) return false;
     
-    if(WordSearch[coord.y][coord.x] != 'X') return false;
-    if(WordSearch[coord.y + 1][coord.x + 1] != 'M') return false;
-    if(WordSearch[coord.y + 2][coord.x + 2] != 'A') return false;
-    if(WordSearch[coord.y + 3][coord.x + 3] != 'S') return false;
+    if(IsPart1 && WordSearch[coord.y][coord.x] != 'X') return false;
+    if(WordSearch[coord.y + IsPart1][coord.x + IsPart1] != 'M') return false;
+    if(WordSearch[coord.y + IsPart1 + 1][coord.x + IsPart1 + 1] != 'A') return false;
+    if(WordSearch[coord.y + IsPart1 + 2][coord.x + IsPart1 + 2] != 'S') return false;
 
     return true;
 }
 
 bool Day4::CheckSouthEast(Coord coord) const
 {
-    if(coord.y - 3 < 0 || coord.x + 3 > WordSearch[0].size() - 1) return false;
+    if(coord.y - 2 - IsPart1 < 0 || coord.x + 2 + IsPart1 > WordSearch[0].size() - 1) return false;
 
-    if(WordSearch[coord.y][coord.x] != 'X') return false;
-    if(WordSearch[coord.y - 1][coord.x + 1] != 'M') return false;
-    if(WordSearch[coord.y - 2][coord.x + 2] != 'A') return false;
-    if(WordSearch[coord.y - 3][coord.x + 3] != 'S') return false;
+    if(IsPart1 && WordSearch[coord.y][coord.x] != 'X') return false;
+    if(WordSearch[coord.y - IsPart1][coord.x + IsPart1] != 'M') return false;
+    if(WordSearch[coord.y - IsPart1 - 1][coord.x + IsPart1 + 1] != 'A') return false;
+    if(WordSearch[coord.y - IsPart1 - 2][coord.x + IsPart1 + 2] != 'S') return false;
+    return true;
 }
 
 bool Day4::CheckSouthWest(Coord coord) const
 {
     if(coord.y - 3 < 0 || coord.x - 3 < 0) return false;
 
-    if(WordSearch[coord.y][coord.x] != 'X') return false;
-    if(WordSearch[coord.y - 1][coord.x - 1] != 'M') return false;
-    if(WordSearch[coord.y - 2][coord.x - 2] != 'A') return false;
-    if(WordSearch[coord.y - 3][coord.x - 3] != 'S') return false;
+    if(IsPart1 && WordSearch[coord.y][coord.x] != 'X') return false;
+    if(WordSearch[coord.y - IsPart1][coord.x - IsPart1] != 'M') return false;
+    if(WordSearch[coord.y - IsPart1 - 1][coord.x - IsPart1 - 1] != 'A') return false;
+    if(WordSearch[coord.y - IsPart1 - 2][coord.x - IsPart1 - 2] != 'S') return false;
+    return true;
 }
 
 bool Day4::CheckNorthWest(Coord coord) const
 {
     if(coord.y + 3 > WordSearch.size() - 1 || coord.x - 3 < 0 ) return false;
 
-    if(WordSearch[coord.y][coord.x] != 'X') return false;
-    if(WordSearch[coord.y + 1][coord.x - 1] != 'M') return false;
-    if(WordSearch[coord.y + 2][coord.x - 2] != 'A') return false;
-    if(WordSearch[coord.y + 3][coord.x - 3] != 'S') return false;
+    if(IsPart1 && WordSearch[coord.y][coord.x] != 'X') return false;
+    if(WordSearch[coord.y + IsPart1][coord.x - IsPart1] != 'M') return false;
+    if(WordSearch[coord.y + IsPart1 + 1][coord.x - IsPart1 - 1] != 'A') return false;
+    if(WordSearch[coord.y + IsPart1 + 2][coord.x - IsPart1 - 2] != 'S') return false;
+    return true;
 }
 
 bool Day4::CheckDirection(Direction direction, Coord coord) const

@@ -36,7 +36,7 @@ public:
     bool Init() override;
     void Run() override;
 private:
-    std::vector<std::string> InList;
+    std::string InString;
 };
 
 class Day4 : public Day
@@ -63,7 +63,9 @@ private:
         int x;
         int y;
     };
-    
+
+    void Part1();
+    bool IsPart1 = false;
     bool CheckDirection(Direction direction, Coord coord) const;
     bool CheckNorth(Coord coord) const;
     bool CheckEast(Coord coord) const;
