@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 class Day
 {
@@ -77,4 +78,74 @@ private:
     bool CheckNorthWest(Coord coord) const;
 
     std::vector<std::vector<char>> WordSearch;
+};
+
+class Day11 : public Day
+{
+    bool Init() override;
+    void Run() override;
+
+private:
+    struct Stone
+    {
+        Stone(){};
+        Stone(const std::string& input) : Engraving(input){}
+        std::string Engraving;
+    };
+
+    // Split a new stone from this one
+    Stone Split(Stone& source)
+    {
+        Stone newStone;
+        for(int i = source.Engraving.length() / 2; i < source.Engraving.length(); i++)
+        {
+            newStone.Engraving.push_back(source.Engraving[i]);
+        }
+        source.Engraving.erase(source.Engraving.length() / 2);
+
+        // correct 0s
+        if(!std::stoi(source.Engraving))
+        {
+            source.Engraving = "0";
+        }
+        if(!std::stoi(newStone.Engraving))
+        {
+            newStone.Engraving = "0";
+        }
+        if(source.Engraving.size() > 1)
+        {
+            int index = 0;
+            bool found = false;
+            while(source.Engraving[index] == '0')
+            {
+                found = true;
+                index++;
+            }
+            
+            if(found)
+            {
+                source.Engraving.erase(0,index);
+            }
+        }
+        if(newStone.Engraving.size() > 1)
+        {
+            int index = 0;
+            bool found = false;
+            while(newStone.Engraving[index] == '0')
+            {
+                found = true;
+                index++;
+            }
+            
+            if(found)
+            {
+                newStone.Engraving.erase(0,index);
+            }
+        }
+        return newStone;
+    }
+    
+    void Blink();
+    
+    std::vector<Stone> Stones;
 };

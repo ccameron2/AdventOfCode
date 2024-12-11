@@ -1,7 +1,5 @@
 #include "Day.h"
-#include <iostream>
 #include <sstream>
-#include <string>
 
 bool Day2::Init()
 {

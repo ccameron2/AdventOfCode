@@ -28,6 +28,9 @@ int main()
         case 4:
             selectedDay = std::make_unique<Day4>();
             break;
+        case 11:
+            selectedDay = std::make_unique<Day11>();
+            break;
         default:
             std::cout << "Invalid input\n";
             return 0;

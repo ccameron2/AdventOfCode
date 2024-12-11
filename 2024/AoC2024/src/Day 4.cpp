@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "Day.h"
 
 bool Day4::Init()

@@ -1,6 +1,4 @@
 #include "Day.h"
-#include <iostream>
-#include <string>
 #include <algorithm>
 
 bool Day1::Init()

@@ -1,9 +1,6 @@
 #include "Day.h"
 
-#include <iostream>
 #include <ranges>
-#include <string>
-
 
 bool Day3::Init()
 {
