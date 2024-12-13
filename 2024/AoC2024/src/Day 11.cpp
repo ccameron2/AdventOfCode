@@ -19,7 +19,7 @@ bool Day11::Init()
 
 void Day11::Run()
 {
-    int blinkCount = 25;
+    int blinkCount = 8;
     for(int i = 0; i < blinkCount; i++)
     {
         Blink();
@@ -32,7 +32,7 @@ void Day11::Blink()
     std::vector<Stone> newStones;
     for(Stone& stone : Stones)
     {
-        if(std::stoi(stone.Engraving) < 0)
+        if(std::stoul(stone.Engraving) < 0)
         {
             std::cout << "Negative engraving!" << std::endl;
         }
@@ -51,10 +51,60 @@ void Day11::Blink()
             newStones.push_back(newStone);
             continue;
         }
-        stone.Engraving = std::to_string(std::stoi(stone.Engraving) * 2024);
+        stone.Engraving = std::to_string(std::stoul(stone.Engraving) * 2024);
         newStones.push_back(stone);
     }
-    //std::cout << std::endl;
+    std::cout << std::endl;
     Stones = newStones;
 }
 
+Day11::Stone Day11::Split(Stone& source)
+{
+    Stone newStone;
+    for(int i = source.Engraving.length() / 2; i < source.Engraving.length(); i++)
+    {
+        newStone.Engraving.push_back(source.Engraving[i]);
+    }
+    source.Engraving.erase(source.Engraving.length() / 2);
+
+    // correct 0s
+    if(!std::stoul(source.Engraving))
+    {
+        source.Engraving = "0";
+    }
+    if(!std::stoul(newStone.Engraving))
+    {
+        newStone.Engraving = "0";
+    }
+    if(source.Engraving.size() > 1)
+    {
+        int index = 0;
+        bool found = false;
+        while(source.Engraving[index] == '0')
+        {
+            found = true;
+            index++;
+        }
+            
+        if(found)
+        {
+            source.Engraving.erase(0,index);
+        }
+    }
+    if(newStone.Engraving.size() > 1)
+    {
+        int index = 0;
+        bool found = false;
+        while(newStone.Engraving[index] == '0')
+        {
+            found = true;
+            index++;
+        }
+            
+        if(found)
+        {
+            newStone.Engraving.erase(0,index);
+        }
+    }
+    return newStone;
+}
