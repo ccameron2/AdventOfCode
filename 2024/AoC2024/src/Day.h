@@ -94,9 +94,20 @@ private:
     };
 
     // Split a new stone from this one
-    Stone Split(Stone& source);
-    
+    static Stone Split(Stone& source);
+    static int ScanZeros(Stone input);
+
     void Blink();
     
     std::vector<Stone> Stones;
+};
+
+// Warehouse Woes
+class Day15 : public Day
+{
+    bool Init() override;
+    void Run() override;
+
+private:
+    
 };

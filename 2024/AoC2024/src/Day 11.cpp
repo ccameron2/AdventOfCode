@@ -19,7 +19,7 @@ bool Day11::Init()
 
 void Day11::Run()
 {
-    int blinkCount = 8;
+    int blinkCount = 25;
     for(int i = 0; i < blinkCount; i++)
     {
         Blink();
@@ -32,10 +32,7 @@ void Day11::Blink()
     std::vector<Stone> newStones;
     for(Stone& stone : Stones)
     {
-        if(std::stoul(stone.Engraving) < 0)
-        {
-            std::cout << "Negative engraving!" << std::endl;
-        }
+        if(std::stoul(stone.Engraving) < 0) return;
         std::cout << stone.Engraving << " ";
         
         if(stone.Engraving == "0")
@@ -65,46 +62,29 @@ Day11::Stone Day11::Split(Stone& source)
     {
         newStone.Engraving.push_back(source.Engraving[i]);
     }
-    source.Engraving.erase(source.Engraving.length() / 2);
-
-    // correct 0s
-    if(!std::stoul(source.Engraving))
-    {
-        source.Engraving = "0";
-    }
-    if(!std::stoul(newStone.Engraving))
-    {
-        newStone.Engraving = "0";
-    }
-    if(source.Engraving.size() > 1)
-    {
-        int index = 0;
-        bool found = false;
-        while(source.Engraving[index] == '0')
-        {
-            found = true;
-            index++;
-        }
-            
-        if(found)
-        {
-            source.Engraving.erase(0,index);
-        }
-    }
-    if(newStone.Engraving.size() > 1)
-    {
-        int index = 0;
-        bool found = false;
-        while(newStone.Engraving[index] == '0')
-        {
-            found = true;
-            index++;
-        }
-            
-        if(found)
-        {
-            newStone.Engraving.erase(0,index);
-        }
-    }
+    source.Engraving.erase(source.Engraving.length() / 2, source.Engraving.length() / 2);
+    
+    if(!std::stoul(source.Engraving)) source.Engraving = "0";
+    else source.Engraving.erase(0, ScanZeros(source));
+    
+    if(!std::stoul(newStone.Engraving)) newStone.Engraving = "0";
+    else newStone.Engraving.erase(0, ScanZeros(newStone));
+    
     return newStone;
+}
+
+int Day11::ScanZeros(Stone input)
+{
+    int index = 0;
+    bool found = false;
+    while(input.Engraving[index] == '0')
+    {
+        found = true;
+        index++;
+    }
+    if(found)
+    {
+        return index;
+    }
+    return 0;
 }
