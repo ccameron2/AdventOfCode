@@ -89,8 +89,8 @@ private:
     struct Stone
     {
         Stone(){};
-        Stone(const std::string& input) : Engraving(input){}
-        std::string Engraving;
+        Stone(const std::string& input) : Engraving(std::stoul(input)){}
+        uint64_t Engraving; // change to number
     };
 
     // Split a new stone from this one
