@@ -38,4 +38,10 @@ int main()
     
     if(selectedDay->Init()) selectedDay->Run();
     else std::cout << "Error during initialisation\n";
+
+#ifdef WINDOWS
+    system("pause");
+#endif
+
+
 }

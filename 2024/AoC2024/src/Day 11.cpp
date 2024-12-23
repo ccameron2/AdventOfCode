@@ -2,7 +2,7 @@
 
 bool Day11::Init()
 {
-    std::fstream inFile("../../../AoC2024/input/input11test.txt");
+    std::fstream inFile("../../../AoC2024/input/input11.txt");
     std::string line;
     
    if(inFile.is_open())
@@ -32,7 +32,7 @@ void Day11::Blink()
     std::vector<Stone> newStones;
     for(Stone& stone : Stones)
     {
-        std::cout << stone.Engraving << " ";
+        //std::cout << stone.Engraving << " ";
         
         if(stone.Engraving == 0)
         {
@@ -50,26 +50,28 @@ void Day11::Blink()
         stone.Engraving *= 2024;
         newStones.push_back(stone);
     }
-    std::cout << std::endl;
+    //std::cout << std::endl;
     Stones = newStones;
 }
 
 Day11::Stone Day11::Split(Stone& source)
 {
     Stone newStone;
-    std::string newStoneEngraving = std::to_string(newStone.Engraving);
-    std::string sourceStoneEngraving = std::to_string(newStone.Engraving);
-    for(int i = sourceStoneEngraving.length() / 2; i < sourceStoneEngraving.length(); i++)
+    std::string newStoneEngraving;
+    std::string sourceStoneEngraving = std::to_string(source.Engraving);
+    for(int i = sourceStoneEngraving.size() / 2; i < sourceStoneEngraving.size(); i++)
     {
         newStoneEngraving.push_back(sourceStoneEngraving[i]);
     }
-    sourceStoneEngraving.erase(sourceStoneEngraving.length() / 2, sourceStoneEngraving.length() / 2);
+    sourceStoneEngraving.erase(sourceStoneEngraving.size() / 2, sourceStoneEngraving.size() / 2);
 
     source.Engraving = std::stoul(sourceStoneEngraving);
     newStone.Engraving = std::stoul(newStoneEngraving);
     
     return newStone;
 }
+
+
 //
 // int Day11::ScanZeros(Stone input)
 // {
