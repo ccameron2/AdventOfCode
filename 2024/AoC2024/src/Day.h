@@ -4,6 +4,9 @@
 #include <fstream>
 #include <iostream>
 
+#include <condition_variable>
+#include <thread>
+
 class Day
 {
 public:
@@ -80,6 +83,7 @@ private:
     std::vector<std::vector<char>> WordSearch;
 };
 
+// Plutonian Pebbles
 class Day11 : public Day
 {
     bool Init() override;
@@ -90,16 +94,36 @@ private:
     {
         Stone(){};
         Stone(const std::string& input) : Engraving(std::stoul(input)){}
-        uint64_t Engraving; // change to number
+        uint64_t Engraving;
     };
-
-    // Split a new stone from this one
+    
     static Stone Split(Stone& source);
-    static int ScanZeros(Stone input);
+    void BlinkThread(uint32_t thread);
+    void CheckStones(Stone* stones, uint64_t numStones, std::vector<Stone>& newStones, std::vector<uint32_t>& newStoneIndices);
 
     void Blink();
     
     std::vector<Stone> Stones;
+
+    struct WorkerThread
+    {
+        std::thread Thread;
+        std::condition_variable WorkReady;
+        std::mutex Lock;
+    };
+
+    struct BlinkWork
+    {
+        bool Complete = true;
+        Stone* Stones;
+        uint32_t NumStones;
+        std::vector<Stone> NewStones;
+        std::vector<uint32_t> NewStoneIndices;
+    };
+
+    static const uint32_t MAX_WORKERS = 31;
+    std::pair<WorkerThread, BlinkWork> BlinkWorkers[MAX_WORKERS];
+    uint32_t NumWorkers;
 };
 
 // Warehouse Woes
