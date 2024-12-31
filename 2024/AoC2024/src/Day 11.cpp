@@ -1,8 +1,5 @@
 #include "Day.h"
 
-
-
-
 bool Day11::Init()
 {
     std::fstream inFile("../../../AoC2024/input/input11.txt");
@@ -22,34 +19,32 @@ bool Day11::Init()
 
 void Day11::Run()
 {
-    NumWorkers = std::thread::hardware_concurrency();
-    if (NumWorkers == 0)  NumWorkers = 8;
-    --NumWorkers;
-
+    //NumWorkers = std::thread::hardware_concurrency();
+    NumWorkers = Stones.size();
+    NumWorkers--; // main thread
+    
     for (uint32_t i = 0; i < NumWorkers; ++i)
     {
         BlinkWorkers[i].first.Thread = std::thread(&Day11::BlinkThread, this, i);
     }
     
-    int blinkCount = 25;
-    for(int i = 0; i < blinkCount; i++)
+    std::vector<std::vector<Stone>> stoneLists;
+    for(Stone stone : Stones)
     {
-        std::vector<std::vector<Stone>> newStoneLists;
-        newStoneLists.resize(NumWorkers + 1);
-        std::vector<std::vector<uint32_t>> newStoneIndicesLists;
-        newStoneIndicesLists.resize(NumWorkers + 1);
-
-        int chunkSize = (Stones.size() / 2) / (NumWorkers + 1);
-        std::vector<Stone> newStones;
-        std::vector<uint32_t> newStoneIndices;
-        Stone* stones = &Stones[0];
+        std::vector<Stone> stones;
+        stones.push_back(stone);
+        stoneLists.push_back(stones);
+    }
+    
+    int blinkCount = 50;
+    for(int b = 0; b < blinkCount; b++)
+    {
         for(uint32_t i = 0; i < NumWorkers; i++)
         {
             BlinkWork& work = BlinkWorkers[i].second;
-            work.Stones = stones;
-            work.NumStones = chunkSize;
+            work.InStones = stoneLists[i];
+            work.NumStones = stoneLists[i].size();
             work.NewStones.clear();
-            work.NewStoneIndices.clear();
             
             auto& workerThread = BlinkWorkers[i].first;
             {
@@ -58,12 +53,12 @@ void Day11::Run()
             }
 
             workerThread.WorkReady.notify_one();
-
-            stones += work.NumStones;
         }
-        uint32_t numRemainingStones = (Stones.size() / 2) - static_cast<uint64_t>(stones - &Stones[0]);
-        CheckStones(stones,numRemainingStones,newStones, newStoneIndices);
 
+        std::vector<Stone> mainThreadStones;
+        CheckStones(stoneLists[stoneLists.size() - 1], mainThreadStones);
+        
+        std::vector<std::vector<Stone>> newStoneLists;
         for (uint32_t i = 0; i < NumWorkers; ++i)
         {
             auto& workerThread = BlinkWorkers[i].first;
@@ -72,29 +67,20 @@ void Day11::Run()
             std::unique_lock<std::mutex> l(workerThread.Lock);
             workerThread.WorkReady.wait(l, [&]() { return work.Complete; });
 
-            newStoneLists[i] = newStones;
-            newStoneIndicesLists[i] = newStoneIndices;
+            newStoneLists.push_back(BlinkWorkers[i].second.NewStones);
         }
-        
-        // do this on the thread not here
-        // collect stones from threads into list
-        std::vector<Stone> finalStones;
+        newStoneLists.push_back(mainThreadStones);
 
-        for(int i = 0; i < NumWorkers; i++)
-        {
-            int index = 0;
-            for(int j = 0; j < chunkSize; j++) // need to use length of a chunk of stones
-            {
-                if(j == newStoneIndicesLists[i][index])
-                {
-                    finalStones.push_back(newStones[i]);
-                    index++;
-                }
-            }
-            finalStones.push_back();
-        }
+        stoneLists.clear();
+        stoneLists = newStoneLists;
     }
-    std::cout << Stones.size() << std::endl;
+    
+    uint64_t stoneCount = 0;
+    for(auto stoneList : stoneLists)
+    {
+        stoneCount += stoneList.size();
+    }
+    std::cout << stoneCount << std::endl;
 }
 
 void Day11::Blink()
@@ -151,7 +137,7 @@ void Day11::BlinkThread(uint32_t thread)
             worker.WorkReady.wait(l, [&]() { return !work.Complete; });
         }
 
-        CheckStones(work.Stones, work.NumStones, work.NewStones, work.NewStoneIndices);
+        CheckStones(work.InStones, work.NewStones);
 			
         {
             std::unique_lock<std::mutex> l(worker.Lock);
@@ -162,32 +148,25 @@ void Day11::BlinkThread(uint32_t thread)
     }
 }
 
-void Day11::CheckStones(Stone* stones, uint64_t numStones, std::vector<Stone>& newStones, std::vector<uint32_t>& newStoneIndices)
+void Day11::CheckStones(std::vector<Stone>& stones, std::vector<Stone>& newStones)
 {
-    int index = 0;
-    Stone* endStone = stones + numStones - 1;
-    do
+    for(auto& stone : stones)
     {
-        if(stones->Engraving == 0)
+        if(stone.Engraving == 0)
         {
-            stones->Engraving = 1;
-            stones++;
-            index++;
+            stone.Engraving = 1;
+            newStones.push_back(stone);
             continue;
         }
-        if(std::to_string(stones->Engraving).size() % 2 == 0)
+        if(std::to_string(stone.Engraving).size() % 2 == 0)
         {
-            Stone newStone = Split(*stones);
+            Stone newStone = Split(stone);
+            newStones.push_back(stone);
             newStones.push_back(newStone);
-            newStoneIndices.push_back(++index);
-            index++;
-            stones++;
             continue;
         }
-        stones->Engraving *= 2024;
-        stones++;
-        index++;
+        stone.Engraving *= 2024;
+        newStones.push_back(stone);
     }
-    while(stones != endStone);
 }
 

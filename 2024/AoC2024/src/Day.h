@@ -99,7 +99,7 @@ private:
     
     static Stone Split(Stone& source);
     void BlinkThread(uint32_t thread);
-    void CheckStones(Stone* stones, uint64_t numStones, std::vector<Stone>& newStones, std::vector<uint32_t>& newStoneIndices);
+    static void CheckStones(std::vector<Stone>& stones, std::vector<Stone>& newStones);
 
     void Blink();
     
@@ -115,13 +115,11 @@ private:
     struct BlinkWork
     {
         bool Complete = true;
-        Stone* Stones;
         uint32_t NumStones;
         std::vector<Stone> NewStones;
-        std::vector<uint32_t> NewStoneIndices;
     };
 
-    static const uint32_t MAX_WORKERS = 31;
+    static const uint32_t MAX_WORKERS = 8;
     std::pair<WorkerThread, BlinkWork> BlinkWorkers[MAX_WORKERS];
     uint32_t NumWorkers;
 };
