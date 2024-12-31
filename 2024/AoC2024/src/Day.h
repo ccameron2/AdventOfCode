@@ -115,7 +115,8 @@ private:
     struct BlinkWork
     {
         bool Complete = true;
-        uint32_t NumStones;
+        std::vector<Stone> InStones;
+        uint64_t NumStones;
         std::vector<Stone> NewStones;
     };
 
