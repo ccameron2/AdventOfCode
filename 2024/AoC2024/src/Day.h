@@ -40,10 +40,11 @@ public:
     bool Init() override;
     void Run() override;
     int CheckMul(int currentIndex);
-
+    int CheckEnabled(int currentIndex);
 private:
     std::string InString;
     std::vector<std::pair<int,int>> Elements;
+    bool Enabled = true;
 };
 
 class Day4 : public Day

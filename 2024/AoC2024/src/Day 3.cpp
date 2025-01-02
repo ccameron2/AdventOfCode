@@ -18,12 +18,15 @@ bool Day3::Init()
 
 void Day3::Run()
 {
-    
-    int checkIndex = 0;
+    int checkIndex;
     for(int i = 0; i < InString.size(); i+= checkIndex)
     {
         checkIndex = 0;
-        if(InString[i] == 'm')
+        if(InString[i] == 'd')
+        {
+            checkIndex = CheckEnabled(i);
+        }
+        else if(InString[i] == 'm' && Enabled)
         {
             checkIndex = CheckMul(i);
         }
@@ -83,7 +86,52 @@ int Day3::CheckMul(int currentIndex)
     checkIndex += numIndex2;
         
     if(InString[currentIndex + numIndex1 + 5 + numIndex2] != ')') return checkIndex;
-
+    checkIndex++;
+    
     Elements.emplace_back(std::stoi(inNum1), std::stoi(inNum2));
-    return ++checkIndex;
+    
+    return checkIndex;
+}
+
+int Day3::CheckEnabled(int currentIndex)
+{
+    int checkIndex = 1;
+    if(InString[currentIndex] != 'd') return checkIndex;
+    checkIndex++;
+    if(InString[currentIndex + 1] != 'o') return checkIndex;
+    checkIndex++;
+    if(InString[currentIndex + 2] == '(' || InString[currentIndex + 2] == 'n')
+    {
+        checkIndex++;
+        if(InString[currentIndex + 3] == ')' || std::string{InString[currentIndex + 3]} == "'")
+        {
+            checkIndex++;
+            // Do
+            if(InString[currentIndex + 2] == '(' && InString[currentIndex + 3] == ')')
+            {
+                Enabled = true;
+                return checkIndex;
+            }
+
+            if(InString[currentIndex + 4] != 't') return checkIndex;
+            checkIndex++;
+            if(InString[currentIndex + 5] != '(') return checkIndex;
+            checkIndex++;
+            if(InString[currentIndex + 6] != ')') return checkIndex;
+            checkIndex++;
+            
+            // Dont
+            Enabled = false;
+        }
+        else
+        {
+            return checkIndex;
+        }
+    }
+    else
+    {
+        return checkIndex;
+    }
+    
+    return checkIndex;
 }
