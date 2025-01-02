@@ -39,8 +39,11 @@ class Day3 : public Day
 public:
     bool Init() override;
     void Run() override;
+    int CheckMul(int currentIndex);
+
 private:
     std::string InString;
+    std::vector<std::pair<int,int>> Elements;
 };
 
 class Day4 : public Day
