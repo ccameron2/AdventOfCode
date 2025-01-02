@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Day.h"
 
 #include <ranges>
@@ -16,65 +18,53 @@ bool Day3::Init()
 
 void Day3::Run()
 {
-    std::vector<char> safeChars{'m','u','l','(',',',')'};
-    std::vector<std::string> output;
     std::vector<std::pair<int,int>> elements;
-    int safeIndex;
+    
     int checkIndex;
     for(int i = 0; i < InString.size(); i+= checkIndex)
     {
-        checkIndex = 0;
-        safeIndex = 0;
-        if(i + checkIndex > InString.size() - 1) break;
-        std::string element1;
-        std::string element2;
-       
-        bool failed = false;
-        while (!failed)
+        checkIndex = 1;
+        if(InString[i] != 'm') continue;
+        checkIndex++;
+        if(InString[i + 1] != 'u') continue;
+        checkIndex++;
+        if(InString[i + 2] != 'l') continue;
+        checkIndex++;
+        if(InString[i + 3] != '(') continue;
+        checkIndex++;
+        
+        if(!stoi(std::string{InString[i + 4]})) continue;
+        
+        int numIndex1 = 0;
+        std::string inNum1;
+        std::string charStr{InString[i + 4 + numIndex1]};
+        while(std::any_of(charStr.begin(), charStr.end(), ::isdigit))
         {
-            char ch = InString[i + checkIndex];
-            if(safeIndex == safeChars.size())
-            {
-                elements.push_back(std::make_pair<int,int>(stoi(element1),stoi(element2)));
-                break;
-            }
-            if(ch == safeChars[safeIndex])
-            {
-                if(safeIndex == 3)
-                {
-                    int digitIndex = 1;
-                    
-                    while(isdigit(InString[i + checkIndex + digitIndex]))
-                    {
-                        element1.push_back(InString[i + checkIndex + digitIndex]);
-                        digitIndex++;
-                    }
-                    
-                    checkIndex += digitIndex;
-                    safeIndex++;
-                    continue;
-                }
-                if(safeIndex == 4)
-                {
-                    int digitIndex = 1;
-                    while(isdigit(InString[i + checkIndex + digitIndex]))
-                    {
-                        element2.push_back(InString[i + checkIndex + digitIndex]);
-                        digitIndex++;
-                    }
-                    checkIndex += digitIndex;
-                    safeIndex++;
-                    continue;
-                }
-                safeIndex++;
-                checkIndex++;
-            }
-            else
-            {
-                failed = true;
-                checkIndex++;
-            }
+            inNum1.push_back(InString[i + 4 + numIndex1]);
+            numIndex1++;
+            charStr = std::string{InString[i + 4 + numIndex1]};
         }
+        checkIndex += numIndex1; // check
+        
+        if(InString[i + numIndex1 + 4] != ',') continue;
+        checkIndex;
+        
+        if(!stoi(std::string{InString[i + numIndex1 + 5]})) continue;
+
+        int numIndex2 = 0;
+        std::string inNum2;
+        std::string charStr2{InString[i + numIndex1 + 5 + numIndex2]};
+        while(std::any_of(charStr2.begin(), charStr2.end(), ::isdigit))
+        {
+            inNum2.push_back(InString[i + numIndex1 + 5 + numIndex2]);
+            numIndex2++;
+            charStr2 = std::string{InString[i + numIndex1 + 5 + numIndex2]};
+        }
+        checkIndex += numIndex2;
+        
+        if(InString[i + numIndex1 + 5 + numIndex2] != ')') continue;
+
+        elements.emplace_back(std::stoi(inNum1), std::stoi(inNum2));
     }
 
     int finalCount = 0;
