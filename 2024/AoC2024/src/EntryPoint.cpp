@@ -28,6 +28,9 @@ int main()
         case 4:
             selectedDay = std::make_unique<Day4>();
             break;
+        case 6:
+            selectedDay = std::make_unique<Day6>();
+            break;
         case 11:
             selectedDay = std::make_unique<Day11>();
             break;
@@ -41,6 +44,7 @@ int main()
 
 #ifdef WINDOWS
     system("pause");
+    system("cls");
 #endif
 
 

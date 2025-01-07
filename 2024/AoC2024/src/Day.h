@@ -87,6 +87,18 @@ private:
     std::vector<std::vector<char>> WordSearch;
 };
 
+class Day6 : public Day
+{
+    bool Init() override;
+    void Run() override;
+private:
+    std::vector<std::vector<char>> Room;
+    bool MoveNorth(int i, int j);
+    bool MoveEast(int i, int j);
+    bool MoveSouth(int i, int j);
+    bool MoveWest(int i, int j);
+};
+
 // Plutonian Pebbles
 class Day11 : public Day
 {
@@ -136,5 +148,4 @@ class Day15 : public Day
     void Run() override;
 
 private:
-    
 };
