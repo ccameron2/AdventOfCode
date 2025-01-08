@@ -8,12 +8,19 @@ bool Day6::Init()
     {
         std::string inString;
         int index = 0;
+        int xIndex = 0;
         while(inFile >> inString)
         {
             Room.push_back(std::vector<char>());
             for(auto& inChar : inString)
             {
                 Room[index].push_back(inChar);
+                xIndex++;
+                if(inChar == '^')
+                {
+                    CurrentCoord = {xIndex,index};
+                    CurrentDirection = Direction::North; 
+                }
             }
             index++;
         }
@@ -24,40 +31,77 @@ bool Day6::Init()
 
 void Day6::Run()
 {
-    for(int i = 0; i < Room.size(); i++)
+    while(CurrentCoord.x < Room[CurrentCoord.y].size() && CurrentCoord.y < Room.size() && CurrentCoord.y > 0 && CurrentCoord.x > 0)
     {
-        for(int j = 0; j < Room[i].size(); j++)
+        std::pair<Coord,bool> result;
+        if(CurrentDirection == Direction::North)
         {
-            char ch = Room[i][j];
-            if(ch == '^')
-            {
-                MoveNorth(i,j);
-            }
-            if(ch == '^')
-            {
-                MoveEast(i,j);
-            }
-            if(ch == '^')
-            {
-                MoveSouth(i,j);
-            }
-            if(ch == '^')
-            {
-                MoveWest(i,j);
-            }
+            result = MoveNorth(CurrentCoord);
+            
+            if(!result.second) break;
+            CurrentDirection = Direction::East;
         }
-        std::cout << std::endl;
+        else if(CurrentDirection == Direction::East)
+        {
+            result = MoveEast(CurrentCoord);
+            
+            if(!result.second) break;
+            CurrentDirection = Direction::South;
+        }
+        else if(CurrentDirection == Direction::South)
+        {
+            result = MoveSouth(CurrentCoord);
+            
+            if(!result.second) break;
+            CurrentDirection = Direction::West;
+        }
+        else // West
+        {
+            result = MoveWest(CurrentCoord);
+            
+            if(!result.second) break;
+            CurrentDirection = Direction::North;
+        }
+        CurrentCoord = result.first;
     }
 }
 
-bool Day6::MoveNorth(int i, int j)
+std::pair<Day6::Coord,bool> Day6::MoveNorth(Coord coord)
 {
-    if(Room[i + 1][j] == '#')
-        return false;
+    if(Room[coord.y + 1][coord.x] == '#')
+        return std::make_pair(coord, true);
 
     int index = 1;
-    while(Room[i + index][j] != '#' && i + index < Room.size())
+    while(coord.y + index < Room.size())
     {
-        
+        char& checkChar = Room[coord.y + index][coord.x];
+        if(checkChar == '#') return std::make_pair(Coord{coord.y + index - 1,coord.x}, true);
+        if(checkChar != 'x')
+        {
+            checkChar = 'x';
+            tileCount++;
+        }
+        index++;
     }
+    return std::make_pair(coord, false);
+}
+
+std::pair<Day6::Coord,bool> Day6::MoveSouth(Coord coord)
+{
+    if(Room[coord.y - 1][coord.x] == '#')
+        return std::make_pair(coord, true);
+
+    int index = 1;
+    while(coord.y - index > 0)
+    {
+        char& checkChar = Room[coord.y - index][coord.x];
+        if(checkChar == '#') return std::make_pair(Coord{coord.y - index + 1,coord.x}, true);
+        if(checkChar != 'x')
+        {
+            checkChar = 'x';
+            tileCount++;
+        }
+        index++;
+    }
+    return std::make_pair(coord, false);
 }

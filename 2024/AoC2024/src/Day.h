@@ -92,11 +92,26 @@ class Day6 : public Day
     bool Init() override;
     void Run() override;
 private:
+    enum class Direction
+    {
+        North,
+        East,
+        South,
+        West
+    }; 
+    struct Coord
+    {
+        int x;
+        int y;
+    };
     std::vector<std::vector<char>> Room;
-    bool MoveNorth(int i, int j);
-    bool MoveEast(int i, int j);
-    bool MoveSouth(int i, int j);
-    bool MoveWest(int i, int j);
+    Coord CurrentCoord;
+    Direction CurrentDirection = Direction::North;
+    int tileCount = 0;
+    std::pair<Coord,bool> MoveNorth(Coord coord);
+    std::pair<Coord,bool> MoveEast(Coord coord);
+    std::pair<Coord,bool> MoveSouth(Coord coord);
+    std::pair<Coord,bool> MoveWest(Coord coord);
 };
 
 // Plutonian Pebbles
