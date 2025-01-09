@@ -2,25 +2,25 @@
 
 bool Day6::Init()
 {
-
     std::fstream inFile("../../../AoC2024/input/input6test.txt");
     if(inFile)
     {
         std::string inString;
         int index = 0;
-        int xIndex = 0;
         while(inFile >> inString)
         {
+            int xIndex = 0;
             Room.push_back(std::vector<char>());
             for(auto& inChar : inString)
             {
                 Room[index].push_back(inChar);
-                xIndex++;
                 if(inChar == '^')
                 {
                     CurrentCoord = {xIndex,index};
-                    CurrentDirection = Direction::North; 
+                    CurrentDirection = Direction::North;
+                    Room[index][xIndex] = 'x';
                 }
+                xIndex++;
             }
             index++;
         }
@@ -31,7 +31,7 @@ bool Day6::Init()
 
 void Day6::Run()
 {
-    while(CurrentCoord.x < Room[CurrentCoord.y].size() && CurrentCoord.y < Room.size() && CurrentCoord.y > 0 && CurrentCoord.x > 0)
+    while(CurrentCoord.x < Room[CurrentCoord.y].size() && CurrentCoord.y < Room.size() && CurrentCoord.y >= 0 && CurrentCoord.x >= 0)
     {
         std::pair<Coord,bool> result;
         if(CurrentDirection == Direction::North)
@@ -64,18 +64,51 @@ void Day6::Run()
         }
         CurrentCoord = result.first;
     }
+    
+    std::cout << std::endl;
+    for(auto row : Room)
+    {
+        for(char ch : row)
+        {
+            std::cout << ch;
+        }
+        std::cout << std::endl;
+    }
+    
+    std::cout << tileCount << std::endl;
 }
 
 std::pair<Day6::Coord,bool> Day6::MoveNorth(Coord coord)
 {
-    if(Room[coord.y + 1][coord.x] == '#')
+    char res = Room[coord.y - 1][coord.x];
+    if(res == '#')
         return std::make_pair(coord, true);
 
     int index = 1;
-    while(coord.y + index < Room.size())
+    while(coord.y - index > 0)
     {
-        char& checkChar = Room[coord.y + index][coord.x];
-        if(checkChar == '#') return std::make_pair(Coord{coord.y + index - 1,coord.x}, true);
+        char& checkChar = Room[coord.y - index][coord.x];
+        if(checkChar == '#') return std::make_pair(Coord{coord.x,coord.y - index + 1}, true);
+        if(checkChar != 'x')
+        {
+            checkChar = 'x';
+            tileCount++;
+        }
+        index++;
+    }
+    return std::make_pair(coord, false);
+}
+
+std::pair<Day6::Coord,bool> Day6::MoveEast(Coord coord)
+{
+    if(Room[coord.y][coord.x + 1] == '#')
+        return std::make_pair(coord, true);
+
+    int index = 1;
+    while(coord.x + index < Room[coord.y].size())
+    {
+        char& checkChar = Room[coord.y][coord.x + index];
+        if(checkChar == '#') return std::make_pair(Coord{coord.x + index - 1, coord.y}, true);
         if(checkChar != 'x')
         {
             checkChar = 'x';
@@ -88,14 +121,34 @@ std::pair<Day6::Coord,bool> Day6::MoveNorth(Coord coord)
 
 std::pair<Day6::Coord,bool> Day6::MoveSouth(Coord coord)
 {
-    if(Room[coord.y - 1][coord.x] == '#')
+    if(Room[coord.y + 1][coord.x] == '#')
         return std::make_pair(coord, true);
 
     int index = 1;
-    while(coord.y - index > 0)
+    while(coord.y + index < Room.size())
     {
-        char& checkChar = Room[coord.y - index][coord.x];
-        if(checkChar == '#') return std::make_pair(Coord{coord.y - index + 1,coord.x}, true);
+        char& checkChar = Room[coord.y + index][coord.x];
+        if(checkChar == '#') return std::make_pair(Coord{coord.x,coord.y + index - 1}, true);
+        if(checkChar != 'x')
+        {
+            checkChar = 'x';
+            tileCount++;
+        }
+        index++;
+    }
+    return std::make_pair(coord, false);
+}
+
+std::pair<Day6::Coord,bool> Day6::MoveWest(Coord coord)
+{
+    if(Room[coord.y][coord.x - 1] == '#')
+        return std::make_pair(coord, true);
+
+    int index = 1;
+    while(coord.x - index > 0)
+    {
+        char& checkChar = Room[coord.y][coord.x - index];
+        if(checkChar == '#') return std::make_pair(Coord{coord.x - index + 1, coord.y}, true);
         if(checkChar != 'x')
         {
             checkChar = 'x';
