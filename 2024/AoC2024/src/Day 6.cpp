@@ -2,7 +2,7 @@
 
 bool Day6::Init()
 {
-    std::fstream inFile("../../../AoC2024/input/input6test.txt");
+    std::fstream inFile("../../../AoC2024/input/input6.txt");
     if(inFile)
     {
         std::string inString;
@@ -19,6 +19,7 @@ bool Day6::Init()
                     CurrentCoord = {xIndex,index};
                     CurrentDirection = Direction::North;
                     Room[index][xIndex] = 'x';
+                    tileCount++;
                 }
                 xIndex++;
             }
@@ -59,7 +60,8 @@ void Day6::Run()
         {
             result = MoveWest(CurrentCoord);
             
-            if(!result.second) break;
+            if(!result.second)
+                break;
             CurrentDirection = Direction::North;
         }
         CurrentCoord = result.first;
@@ -85,7 +87,7 @@ std::pair<Day6::Coord,bool> Day6::MoveNorth(Coord coord)
         return std::make_pair(coord, true);
 
     int index = 1;
-    while(coord.y - index > 0)
+    while(coord.y - index >= 0)
     {
         char& checkChar = Room[coord.y - index][coord.x];
         if(checkChar == '#') return std::make_pair(Coord{coord.x,coord.y - index + 1}, true);
@@ -145,8 +147,9 @@ std::pair<Day6::Coord,bool> Day6::MoveWest(Coord coord)
         return std::make_pair(coord, true);
 
     int index = 1;
-    while(coord.x - index > 0)
+    while(coord.x - index >= 0)
     {
+
         char& checkChar = Room[coord.y][coord.x - index];
         if(checkChar == '#') return std::make_pair(Coord{coord.x - index + 1, coord.y}, true);
         if(checkChar != 'x')
