@@ -17,5 +17,5 @@ public:
 private:
     int CurrentPosition = 50;
     int NumTimesZero = 0;
-    int TopValue = 99;
+    int TopValue = 100;
 };

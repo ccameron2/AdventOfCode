@@ -9,7 +9,7 @@ Day1::Day1()
 {
     std::vector<std::string> InputStrings;
     
-    std::ifstream file(ExampleFile);
+    std::ifstream file(InputFile);
 
     if (file.is_open()) 
     {
@@ -31,31 +31,57 @@ Day1::Day1()
             numComp += c;
         }
         int readNumber = std::stoi(numComp);
-        str[0] == 'R' ? safe.NextCombination(0, readNumber) : safe.NextCombination(1,readNumber);
+        str[0] == 'R' ? safe.NextCombination(0, readNumber) : safe.NextCombination(1, readNumber);
     }
     safe.PrintResult();
 }
 
 void Safe::NextCombination(int dir, int movement)
 {
+    int numCycles = movement / 100;
+    if (numCycles > 0)
+    {
+        movement -= numCycles * 100;
+        
+    }
+    NumTimesZero += numCycles;
+    
     if (dir == 0)
     {
+        bool wasAlreadyZero = CurrentPosition == 0;
         CurrentPosition += movement;
-        if (CurrentPosition > TopValue)
+        if (CurrentPosition >= TopValue)
         {
-            int Remainder = CurrentPosition - TopValue;
-            CurrentPosition = Remainder;
+            int remainder = CurrentPosition - TopValue;
+            CurrentPosition = remainder;
+            if (CurrentPosition != 0)
+            {
+                if (!wasAlreadyZero)
+                {
+                    NumTimesZero++;
+                }
+            }
         }
     }
     else
     {
+        bool wasAlreadyZero = CurrentPosition == 0;
         CurrentPosition -= movement;
         if (CurrentPosition < 0)
         {
-            CurrentPosition = TopValue - std::abs(CurrentPosition);
+            CurrentPosition += TopValue;
+            if (CurrentPosition != 0)
+            {
+                if (!wasAlreadyZero)
+                {
+                    NumTimesZero++;
+                }
+            }
         }
     }
-    if (CurrentPosition == 0) NumTimesZero++;
+    
+    if (CurrentPosition == 0) 
+        NumTimesZero++;
 }
 
 void Safe::PrintResult()
