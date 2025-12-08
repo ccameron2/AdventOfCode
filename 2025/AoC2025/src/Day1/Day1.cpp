@@ -9,7 +9,7 @@ Day1::Day1()
 {
     std::vector<std::string> InputStrings;
     
-    std::ifstream file(InputFile);
+    std::ifstream file("input.txt");
 
     if (file.is_open()) 
     {

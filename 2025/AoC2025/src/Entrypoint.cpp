@@ -1,4 +1,5 @@
 #include "Day1/Day1.h"
+#include "Day2/Day2.h"
 
 #include <iostream>
 
@@ -11,11 +12,14 @@ int main()
     Day* newDay = nullptr;
     switch(day)
     {
-        case 1:
-            newDay = new Day1();
+    case 1:
+        newDay = new Day1();
         break;
-        default:
-            std::cout << "Invalid day" << std::endl;
+    case 2:
+        newDay = new Day2();
+        break;
+    default:
+        std::cout << "Invalid day" << std::endl;
         break;
     }
 
