@@ -52,7 +52,7 @@ Day2::Day2()
 {
 	std::vector<std::string> InputStrings;
 	
-	std::ifstream file("input2.txt");
+	std::ifstream file("example2.txt");
 
 	if (file.is_open()) 
 	{
